@@ -32,3 +32,6 @@ jobs: # 실제 실행될 내용
     - name: Push changes # 4) 메인에 푸시
       run: |
         git push
+env:
+        REPO_KEY: ${{secrets.PUSH_TOKEN}}
+        USERNAME: github-actions[bot]
