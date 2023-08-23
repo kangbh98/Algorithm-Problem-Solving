@@ -34,4 +34,4 @@ jobs: # 실제 실행될 내용
         git push
 env:
         REPO_KEY: ${{secrets.PUSH_TOKEN}}
-        USERNAME: github-actions[bot]
+        USERNAME: kangbh98
