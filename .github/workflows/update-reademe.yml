@@ -1,7 +1,6 @@
-# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+# 이 워크플로우는 update.py 파일을 실행합니다. 즉 README.md 파일을 업데이트합니다.
 
-name: Update reademe
+name: Update readme # GitHub Actions 탭에서 확인할 수 있는 액션 이름
 
 on: # jobs가 실행되어야 하는 상황 정의
   push:
@@ -29,7 +28,7 @@ jobs: # 실제 실행될 내용
         git config --global user.name 'kangbh98' # 유저명
         git config --global user.email 'fund88@naver.com' # 유저 이메일
         git add -A
-        git commit -am "auto update README.md" # 커밋 메시지
+        git diff --exit-code || git commit -am "auto update README.md" # 커밋 메시지
     - name: Push changes # 4) 메인에 푸시
       run: |
         git push
