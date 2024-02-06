@@ -30,43 +30,43 @@ public class Main{
 
         while (start_x < end_x && start_y < end_y) {
 
-            Deque<Integer> deque = new LinkedList<>();
+            Queue<Integer> queue = new LinkedList<>();
 
             for (int i = start_y; i < end_y; i++) {
-                deque.add(arr[start_x][i]);
+                queue.add(arr[start_x][i]);
             }
 
             for(int i = start_x; i < end_x ;i++){
-                deque.add(arr[i][end_y]);
+                queue.add(arr[i][end_y]);
             }
 
             for (int i = end_y; i > start_y; i--) {
-                deque.add(arr[end_x][i]);
+                queue.add(arr[end_x][i]);
             }
 
             for (int i = end_x; i > start_x; i--) {
-                deque.add(arr[i][start_y]);
+                queue.add(arr[i][start_y]);
             }
 
             for (int i = 0; i < r; i++) {
-                deque.addLast(deque.pollFirst());
+                queue.add(queue.poll());
             }
 
             ////////////////// 넣기
             for (int i = start_y; i < end_y; i++) {
-                arr[start_x][i] = deque.pollFirst();
+                arr[start_x][i] = queue.poll();
             }
 
             for(int i = start_x; i < end_x ;i++){
-                arr[i][end_y] = deque.pollFirst();
+                arr[i][end_y] = queue.poll();
             }
 
             for (int i = end_y; i > start_y; i--) {
-                arr[end_x][i] = deque.pollFirst();
+                arr[end_x][i] = queue.poll();
             }
 
             for (int i = end_x; i > start_x; i--) {
-                arr[i][start_y] =deque.pollFirst();
+                arr[i][start_y] = queue.poll();
             }
 
 
