@@ -1,41 +1,38 @@
+import java.io.*;
 import java.util.*;
 import java.lang.*;
-import java.io.*;
 
 public class Main{
+
     public static void main(String[] args) throws Exception{
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st;
+        StringBuilder sb = new StringBuilder();
         int n = Integer.parseInt(br.readLine());
-        PriorityQueue<Integer> queue = new PriorityQueue<>(new Comparator<Integer>() {
+        PriorityQueue<Integer> pq = new PriorityQueue<>(new Comparator<Integer>() {
+
             @Override
             public int compare(Integer o1, Integer o2) {
-
-                int x = Math.abs(o1);
-                int y = Math.abs(o2);
-                if(x>y){
-                    return x-y;
-                }else if(x==y){
-                    if(o1>o2) return 1;
-                    else return -1;
+                if(Math.abs(o1)==Math.abs(o2)){
+                    return o1-o2;
                 }else {
-                    return -1;
+                    return Math.abs(o1) - Math.abs(o2);
                 }
             }
+
         });
 
-
-        int input;
         for (int i = 0; i < n; i++) {
-            input = Integer.parseInt(br.readLine());
-
-            if(input==0){
-                if(queue.isEmpty()){
+            int num = Integer.parseInt(br.readLine());
+            if( num == 0){
+                if(pq.isEmpty()){
                     System.out.println(0);
-                }else {
-                    System.out.println(queue.remove());
+                }else{
+                    System.out.println(pq.remove());
                 }
-            }else{
-                queue.add(input);
+            }else {
+                pq.add(num);
             }
         }
     }
