@@ -1,45 +1,73 @@
-import java.util.Arrays;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.*;
+import java.lang.*;
 
-class Solution {
-	static int N, likcal, maxjumsu;
-	static int[] jumsu, kcal;
+class Solution
+{
 
-	public static void main(String[] args) {
 
-		Scanner sc = new Scanner(System.in);
+    public static void main(String args[]) throws Exception
+    {
 
-		int tc = sc.nextInt();
-		for (int t = 0; t < tc; t++) {
-			maxjumsu =0;
-			N = sc.nextInt();
-			likcal = sc.nextInt();
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st;
+        StringBuilder sb = new StringBuilder();
+        int T = Integer.parseInt(br.readLine());
 
-			jumsu = new int[N];
-			kcal = new int[N];
 
-			for (int i = 0; i < N; i++) {
-				jumsu[i] = sc.nextInt();
-				kcal[i] = sc.nextInt();
-			}
 
-			combination(0, 0, 0);
-			System.out.printf("#%d %d\n", t+1, maxjumsu);
-		}
-	}
+        for(int test_case = 1; test_case <= T; test_case++)
+        {
+            st = new StringTokenizer(br.readLine());
+            int n = Integer.parseInt(st.nextToken());
+            int l = Integer.parseInt(st.nextToken());
+            int[][] ham = new int[n+1][3];
+            int[][] dp = new int[n+1][l+1];
 
-	private static void combination(int cnt, int j, int k) {	//인덱스, 점수의 합, 칼로리의 합
+            for (int i = 1; i < n+1; i++) {
+                st = new StringTokenizer(br.readLine());
+                ham[i][1] = Integer.parseInt(st.nextToken());
+                ham[i][2] = Integer.parseInt(st.nextToken());
+            }
 
-		if (k > likcal)	//리미트칼로리 넘으면 끝(조건2)
-			return;
-		if (cnt == N) {
-			if (j > maxjumsu) {
-				maxjumsu = j; // 현재 점수누적합이 max보다 크면 max변경(조건3)
-			}
-			return;
-		}
+            Arrays.sort(ham,new Comparator<int[]>(){
+               @Override
+               public int compare(int[] o1,int[] o2){
+                   return o1[2]-o2[2];
+               }
+            });
 
-		combination(cnt + 1, j + jumsu[cnt], k + kcal[cnt]);	//선택하는 경우 
-		combination(cnt + 1, j, k);	//선택하지 않는 경우
-	}
+//            for(int[] a:ham){
+//                for(int b : a){
+//                    System.out.print(b+" ");
+//                }
+//                System.out.println();
+//            }
+
+            for (int i = 1; i < n + 1; i++) {
+                for (int j = 1; j < l + 1; j++) {
+
+                    if(j<ham[i][2]){
+                        dp[i][j] = dp[i-1][j];
+                    }else {
+
+                        dp[i][j] = Math.max(dp[i-1][j],dp[i-1][j-ham[i][2]]+ham[i][1]);
+                    }
+                }
+            }
+
+//            for(int[] a:dp){
+//                for(int b : a){
+//                    System.out.print(b+" ");
+//                }
+//                System.out.println();
+//            }
+
+
+            System.out.println("#"+test_case+" "+dp[n][l]);
+        }
+
+    }
+
 }
