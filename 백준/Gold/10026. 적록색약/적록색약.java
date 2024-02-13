@@ -1,95 +1,113 @@
 import java.io.*;
-import java.lang.*;
 import java.util.*;
+import java.lang.*;
 
-class RGB{
-    int x;
-    int y;
-    public RGB(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-}
 public class Main{
 
-    public static char arr[][];
-    public static boolean tf[][];
-    public static int n;
-    public static Stack<RGB> stack = new Stack<RGB>();
-    public static int rCount = 0;
-    public static int gCount = 0;
-    public static int bCount = 0;
+    static class Node{
+        int x;
+        int y;
 
-    public static void main(String[] args) throws Exception{
+        public Node(int x, int y) {
+            this.x  = x;
+            this.y = y;
+        }
+    }
+
+    static int plus_x[] = {-1, 1, 0, 0};
+    static int plus_y[] = {0, 0, -1, 1};
+
+    static char arr[][];
+    static boolean visitedNormal[][];
+    static boolean visitedDisable[][];
+    static int n;
+
+
+    public static void main(String[] args) throws Exception {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st;
+        StringBuilder sb = new StringBuilder();
         n = Integer.parseInt(br.readLine());
-        arr = new char[n+1][n+1];
-        tf = new boolean[n+1][n+1];
+        arr = new char[n][n];
+        visitedNormal = new boolean[n][n];
+        visitedDisable = new boolean[n][n];
+        int normalCount = 0;
+        int disableCount = 0;
 
-
-        for (int i = 1; i <= n; i++) {
+        for (int i = 0; i < n; i++) {
             String str = br.readLine();
-            for (int k = 1; k <= n; k++) {
-               arr[i][k] = str.charAt(k-1);
+            for (int k = 0; k < n; k++) {
+                arr[i][k] = str.charAt(k);
             }
         }
 
-        Cal();
-        System.out.print(rCount+gCount+bCount+" ");
-
-        tf = new boolean[n+1][n+1];
-
-        bCount = 0;
-        rCount = 0;
-
-        for (int i = 1; i <= n; i++) {
-            for (int k = 1; k <= n; k++) {
-                if(arr[i][k]=='G'){
-                    arr[i][k]= 'R';
+        for (int i = 0; i < n; i++) {
+            for (int k = 0; k < n; k++) {
+                if(!visitedNormal[i][k]){
+                    normal(i, k);
+                    normalCount++;
+                }
+                if(!visitedDisable[i][k]){
+                    disable(i, k);
+                    disableCount++;
                 }
             }
         }
-        Cal();
-        System.out.print(rCount+bCount);
+
+        System.out.println(normalCount+" "+disableCount);
     }
 
-    public static void Cal(){
+    public static void normal(int i , int j){
 
-        for (int i = 1; i <= n; i++) {
-            for (int k = 1; k <= n; k++) {
-                if(!tf[i][k]){
-                    if(arr[i][k]=='R'){
-                        rCount++;
-                    }else if(arr[i][k]=='G'){
-                        gCount++;
-                    }if(arr[i][k]=='B' ){
-                        bCount++;
+        Queue<Node> q = new LinkedList<>();
+        visitedNormal[i][j] = true;
+        q.add(new Node(i, j));
+
+        while (!q.isEmpty()) {
+
+            Node node = q.remove();
+
+            for (int a = 0; a < 4; a++) {
+                int x = node.x + plus_x[a];
+                int y = node.y + plus_y[a];
+
+                if(x>-1 && y>-1 && x<n && y<n && !visitedNormal[x][y]){
+                    if(arr[node.x][node.y] == arr[x][y]){
+                        visitedNormal[x][y] = true;
+                        q.add(new Node(x, y));
                     }
-                    stack.push(new RGB(i,k));
-                    Cal2();
                 }
             }
         }
+
     }
-    public static void Cal2() {
 
-        while (!stack.empty()){
+    public static void disable(int i , int j){
 
-            int arr1[] =  { 0,0,-1,1};
-            int arr2[] = { -1,1,0,0};
+        Queue<Node> q = new LinkedList<>();
+        visitedDisable[i][j] = true;
+        q.add(new Node(i, j));
 
-            RGB rgb = stack.pop();
+        while (!q.isEmpty()) {
 
-            for (int i = 0; i < 4; i++) {
-                int x = rgb.x+arr1[i];
-                int y = rgb.y+arr2[i];
+            Node node = q.remove();
 
-                if( (x>0 && x<=n) && (y>0 && y<=n) && !tf[x][y] && arr[rgb.x][rgb.y]==arr[x][y]){
-                    stack.push(new RGB(x,y));
-                    tf[x][y]=true;
+            for (int a = 0; a < 4; a++) {
+                int x = node.x + plus_x[a];
+                int y = node.y + plus_y[a];
+
+                if(x>-1 && y>-1 && x<n && y<n && !visitedDisable[x][y]){
+                    if(arr[node.x][node.y] == arr[x][y]
+                        || ( arr[node.x][node.y] == 'R' && arr[x][y]=='G')
+                            || ( arr[node.x][node.y] == 'G' && arr[x][y]=='R')    ){
+
+                        visitedDisable[x][y] = true;
+                        q.add(new Node(x, y));
+                    }
                 }
             }
         }
     }
 }
+
